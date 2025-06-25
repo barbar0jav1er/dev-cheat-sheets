@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Flow + Linter - Workflow</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .workflow-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .flow-step:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .step-1 { background: linear-gradient(135deg, #10b981, #059669); }
+        .step-2 { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .step-3 { background: linear-gradient(135deg, #f59e0b, #d97706); }
+        .step-4 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+        .step-5 { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .step-6 { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .step-7 { background: linear-gradient(135deg, #84cc16, #65a30d); }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+        
+        .step-description {
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #1f2937;
+            color: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            border-left: 4px solid #10b981;
+        }
+        
+        .linter-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 10px;
+        }
+        
+        .status-success {
+            background: #ecfdf5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        
+        .status-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        
+        .status-warning {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+        
+        .arrow {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        
+        .arrow-down {
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 20px solid #d1d5db;
+        }
+        
+        .config-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .config-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .config-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .tips-section {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #f59e0b;
+            margin-top: 30px;
+        }
+        
+        .tips-section h3 {
+            color: #92400e;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .tip-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .tip-item h4 {
+            color: #92400e;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .branch-protection {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 1px solid #ef4444;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .branch-protection h4 {
+            color: #991b1b;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .flow-step {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .step-icon {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 GitHub Flow + Linter</h1>
+            <p class="subtitle">Workflow completo con quality gates automáticos</p>
+        </div>
+        
+        <div class="content">
+            <div class="workflow-section">
+                <h2 class="section-title">🔄 Flujo Completo con Linter</h2>
+                
+                <div class="flow-container">
+                    <div class="flow-step">
+                        <div class="step-icon step-1">1</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Crear Feature Branch</h3>
+                            <p class="step-description">Empezar desde main actualizado</p>
+                            <div class="code-block">git checkout main<br>git pull origin main<br>git checkout -b feature/nueva-funcionalidad</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow"><div class="arrow-down"></div></div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon step-2">2</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Desarrollar Código</h3>
+                            <p class="step-description">Escribir código con linter local activo</p>
+                            <div class="code-block"># Linter en tiempo real (VS Code)<br>npm run lint:watch<br><br># Commit con pre-commit hooks<br>git add .<br>git commit -m "feat: add login form"</div>
+                            <div class="linter-status status-success">✅ Linter local: Passed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow"><div class="arrow-down"></div></div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon step-3">3</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Push & CI Trigger</h3>
+                            <p class="step-description">Push dispara checks automáticos</p>
+                            <div class="code-block">git push -u origin feature/nueva-funcionalidad<br><br># GitHub Actions ejecuta:<br># - Linter<br># - Tests<br># - Type checking<br># - Security scan</div>
+                            <div class="linter-status status-warning">⏳ CI running...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow"><div class="arrow-down"></div></div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon step-4">4</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Crear Pull Request</h3>
+                            <p class="step-description">PR con status checks requeridos</p>
+                            <div class="code-block"># En GitHub.com:<br># 1. Compare & pull request<br># 2. Ver status checks<br># 3. Asignar reviewers</div>
+                            <div class="linter-status status-success">✅ All checks passed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow"><div class="arrow-down"></div></div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon step-5">5</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Review + Linter Fixes</h3>
+                            <p class="step-description">Si hay issues, fix y push automáticamente</p>
+                            <div class="code-block"># Si linter falla:<br>npm run lint:fix<br>git add .<br>git commit -m "fix: resolve linting issues"<br>git push<br><br># Re-run checks automáticamente</div>
+                            <div class="linter-status status-error">❌ Linting failed → Fix required</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow"><div class="arrow-down"></div></div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon step-6">6</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Merge Automático</h3>
+                            <p class="step-description">Solo merge si todos los checks pasan</p>
+                            <div class="code-block"># Branch protection rules:<br># ✅ Linter must pass<br># ✅ Tests must pass<br># ✅ Review approved<br># → Auto-merge enabled</div>
+                            <div class="linter-status status-success">✅ Ready to merge</div>
+                        </div>
+                    </div>
+                    
+                    <div class="arrow"><div class="arrow-down"></div></div>
+                    
+                    <div class="flow-step">
+                        <div class="step-icon step-7">7</div>
+                        <div class="step-content">
+                            <h3 class="step-title">Deploy & Cleanup</h3>
+                            <p class="step-description">Auto-tag, release y limpieza</p>
+                            <div class="code-block"># Auto-ejecuta:<br># 1. Auto-tag (v1.2.3)<br># 2. Docker build & push<br># 3. Deploy to production<br><br># Cleanup local:<br>git checkout main<br>git pull origin main<br>git branch -d feature/nueva-funcionalidad</div>
+                            <div class="linter-status status-success">🚀 Deployed successfully</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="config-section">
+                <div class="config-card">
+                    <h3>⚙️ CI Workflow</h3>
+                    <div class="code-block"># .github/workflows/ci.yml<br>name: CI<br><br>on:<br>  pull_request:<br>    branches: [main]<br>  push:<br>    branches: [main]<br><br>jobs:<br>  lint:<br>    runs-on: ubuntu-latest<br>    steps:<br>    - uses: actions/checkout@v4<br>    - uses: actions/setup-node@v4<br>    - run: npm ci<br>    - run: npm run lint<br>    - run: npm test</div>
+                </div>
+                
+                <div class="config-card">
+                    <h3>🔒 Branch Protection</h3>
+                    <div class="branch-protection">
+                        <h4>Settings → Branches → Add rule</h4>
+                        <ul>
+                            <li>✅ Require status checks to pass</li>
+                            <li>✅ Require branches to be up to date</li>
+                            <li>✅ Require pull request reviews</li>
+                            <li>✅ Dismiss stale reviews</li>
+                            <li>✅ Restrict pushes to main</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="config-card">
+                    <h3>🎯 Pre-commit Hooks</h3>
+                    <div class="code-block"># .husky/pre-commit<br>#!/bin/sh<br>. "$(dirname "$0")/_/husky.sh"<br><br>npm run lint<br>npm run test<br>npm run type-check<br><br># package.json<br>{<br>  "scripts": {<br>    "lint": "eslint .",<br>    "lint:fix": "eslint . --fix",<br>    "prepare": "husky install"<br>  }<br>}</div>
+                </div>
+                
+                <div class="config-card">
+                    <h3>🚀 Auto-merge Setup</h3>
+                    <div class="code-block"># GitHub CLI<br>gh pr merge --auto --squash<br><br># O en GitHub.com:<br># 1. Enable auto-merge<br># 2. Select merge method<br># 3. Merge when ready<br><br># Requiere:<br># - All checks pass ✅<br># - Reviews approved ✅<br># - Branch up to date ✅</div>
+                </div>
+            </div>
+            
+            <div class="tips-section">
+                <h3>💡 Tips Pro para Linter + GitHub Flow</h3>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <h4>🔧 Setup Local</h4>
+                        <p>Configura linter en VS Code para feedback inmediato mientras escribes código.</p>
+                    </div>
+                    
+                    <div class="tip-item">
+                        <h4>⚡ Pre-commit Hooks</h4>
+                        <p>Usa Husky para ejecutar linter antes de cada commit. Evita pushes con errores.</p>
+                    </div>
+                    
+                    <div class="tip-item">
+                        <h4>🎯 Draft PRs</h4>
+                        <p>Crea PRs como draft para CI feedback temprano sin notificar reviewers.</p>
+                    </div>
+                    
+                    <div class="tip-item">
+                        <h4>🔄 Auto-fix</h4>
+                        <p>Configura scripts para auto-fix issues menores de linting automáticamente.</p>
+                    </div>
+                    
+                    <div class="tip-item">
+                        <h4>📊 Status Checks</h4>
+                        <p>Require que todos los checks pasen antes de merge. No exceptions!</p>
+                    </div>
+                    
+                    <div class="tip-item">
+                        <h4>🚫 Bypass Protection</h4>
+                        <p>Nunca bypasses branch protection, ni siquiera para "fixes rápidos".</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

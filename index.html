@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Cheat Sheets - Tu biblioteca de referencia</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 80px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="code" width="20" height="20" patternUnits="userSpaceOnUse"><text x="2" y="8" font-family="monospace" font-size="6" fill="white" opacity="0.1">&lt;/&gt;</text><text x="2" y="18" font-family="monospace" font-size="6" fill="white" opacity="0.1">git</text></pattern></defs><rect width="100" height="100" fill="url(%23code)"/></svg>');
+        }
+        
+        .header h1 {
+            font-size: 5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header .subtitle {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .header .tagline {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-top: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stats {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 40px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            font-size: 1rem;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            padding: 60px 40px;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e40af;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .cheatsheets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+        
+        .cheatsheet-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .cheatsheet-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border-color: #3b82f6;
+        }
+        
+        .cheatsheet-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #3b82f6, #1e40af);
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+        
+        .cheatsheet-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .card-icon {
+            font-size: 4rem;
+            margin-bottom: 25px;
+            display: block;
+        }
+        
+        .card-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+        
+        .card-description {
+            color: #6b7280;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        .card-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 30px;
+        }
+        
+        .card-features li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+            color: #374151;
+        }
+        
+        .card-features li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+            top: 8px;
+        }
+        
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .tag {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .card-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -8px rgba(59, 130, 246, 0.5);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #3b82f6;
+            border: 2px solid #3b82f6;
+        }
+        
+        .btn-secondary:hover {
+            background: #3b82f6;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .quick-links {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 60px 0;
+            border: 1px solid #f59e0b;
+        }
+        
+        .quick-links h3 {
+            font-size: 1.8rem;
+            color: #92400e;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .quick-link {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #92400e;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .quick-link:hover {
+            background: white;
+            transform: translateY(-4px);
+            border-color: #f59e0b;
+            box-shadow: 0 8px 25px -8px rgba(245, 158, 11, 0.3);
+        }
+        
+        .about {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 60px 0;
+            border: 1px solid #10b981;
+            text-align: center;
+        }
+        
+        .about h3 {
+            font-size: 1.8rem;
+            color: #065f46;
+            margin-bottom: 20px;
+        }
+        
+        .about p {
+            color: #059669;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 25px;
+        }
+        
+        .author-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .footer h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer a:hover {
+            color: #93c5fd;
+        }
+        
+        .copyright {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 40px 20px;
+            }
+            
+            .header h1 {
+                font-size: 3rem;
+            }
+            
+            .main-content {
+                padding: 40px 20px;
+            }
+            
+            .cheatsheets-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .cheatsheet-card {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+        
+        .cheatsheet-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+        
+        .cheatsheet-card:nth-child(3) {
+            animation-delay: 0.2s;
+        }
+        
+        .cheatsheet-card:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Dev Cheat Sheets</h1>
+            <p class="subtitle">Tu biblioteca personal de referencias rápidas para desarrollo</p>
+            <p class="tagline">Workflow profesional al alcance de tus dedos</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">Cheat Sheets</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Comandos</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Tiempo Ahorrado</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">🚀</div>
+                    <div class="stat-label">Productividad</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <h2 class="section-title">🎯 Tus Referencias Esenciales</h2>
+            
+            <div class="cheatsheets-grid">
+                <div class="cheatsheet-card" onclick="window.open('github-flow-cheatsheet.html', '_blank')">
+                    <div class="card-icon">🚀</div>
+                    <h3 class="card-title">GitHub Flow</h3>
+                    <p class="card-description">Workflow simple pero poderoso para desarrollo individual. El equilibrio perfecto entre simplicidad y profesionalismo.</p>
+                    <ul class="card-features">
+                        <li>Flujo completo paso a paso</li>
+                        <li>Comandos esenciales</li>
+                        <li>Mejores prácticas</li>
+                        <li>Casos especiales (hotfixes, PRs)</li>
+                        <li>Integración con CI/CD</li>
+                    </ul>
+                    <div class="card-tags">
+                        <span class="tag">Git</span>
+                        <span class="tag">GitHub</span>
+                        <span class="tag">Workflow</span>
+                        <span class="tag">Indie</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="github-flow-cheatsheet.html" class="btn btn-primary" target="_blank">
+                            Ver Cheat Sheet 👀
+                        </a>
+                        <a href="github-flow-cheatsheet.html" class="btn btn-secondary" target="_blank">
+                            Imprimir 🖨️
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="cheatsheet-card" onclick="window.open('semver-cheatsheet.html', '_blank')">
+                    <div class="card-icon">📦</div>
+                    <h3 class="card-title">Semantic Versioning</h3>
+                    <p class="card-description">Domina el versionado semántico con ejemplos prácticos. Incluye pre-releases, comandos y mejores prácticas.</p>
+                    <ul class="card-features">
+                        <li>Reglas MAJOR.MINOR.PATCH</li>
+                        <li>Pre-releases (alpha, beta, RC)</li>
+                        <li>Comandos para NPM y Git</li>
+                        <li>Ejemplos reales</li>
+                        <li>Antipatrones a evitar</li>
+                    </ul>
+                    <div class="card-tags">
+                        <span class="tag">SemVer</span>
+                        <span class="tag">Versioning</span>
+                        <span class="tag">NPM</span>
+                        <span class="tag">Releases</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="semver-cheatsheet.html" class="btn btn-primary" target="_blank">
+                            Ver Cheat Sheet 👀
+                        </a>
+                        <a href="semver-cheatsheet.html" class="btn btn-secondary" target="_blank">
+                            Imprimir 🖨️
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="cheatsheet-card" onclick="window.open('github-flow-linter.html', '_blank')">
+                    <div class="card-icon">🔧</div>
+                    <h3 class="card-title">GitHub Flow + Linter</h3>
+                    <p class="card-description">Integración completa de linters en tu workflow. Quality gates automáticos para código impecable.</p>
+                    <ul class="card-features">
+                        <li>3 niveles de linting</li>
+                        <li>Pre-commit hooks</li>
+                        <li>CI/CD integration</li>
+                        <li>Branch protection rules</li>
+                        <li>Auto-merge inteligente</li>
+                    </ul>
+                    <div class="card-tags">
+                        <span class="tag">Linter</span>
+                        <span class="tag">Quality Gates</span>
+                        <span class="tag">CI/CD</span>
+                        <span class="tag">Automation</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="github-flow-linter.html" class="btn btn-primary" target="_blank">
+                            Ver Cheat Sheet 👀
+                        </a>
+                        <a href="github-flow-linter.html" class="btn btn-secondary" target="_blank">
+                            Imprimir 🖨️
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="cheatsheet-card" onclick="window.open('hybrid-gitflow-cheatsheet.html', '_blank')">
+                    <div class="card-icon">🔀</div>
+                    <h3 class="card-title">Hybrid GitFlow</h3>
+                    <p class="card-description">Para desarrolladores indie serios. Lo mejor de GitHub Flow + GitFlow. Incluye timing de pre-releases y ejemplos reales.</p>
+                    <ul class="card-features">
+                        <li>Estrategia híbrida inteligente</li>
+                        <li>Árbol de decisión claro</li>
+                        <li>Timeline de pre-releases</li>
+                        <li>Ejemplos de proyectos reales</li>
+                        <li>Métricas y KPIs</li>
+                    </ul>
+                    <div class="card-tags">
+                        <span class="tag">GitFlow</span>
+                        <span class="tag">Hybrid</span>
+                        <span class="tag">Pre-releases</span>
+                        <span class="tag">Indie Serio</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="hybrid-gitflow-cheatsheet.html" class="btn btn-primary" target="_blank">
+                            Ver Cheat Sheet 👀
+                        </a>
+                        <a href="hybrid-gitflow-cheatsheet.html" class="btn btn-secondary" target="_blank">
+                            Imprimir 🖨️
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quick-links">
+                <h3>⚡ Enlaces Rápidos</h3>
+                <div class="links-grid">
+                    <a href="https://docs.github.com/en/get-started/quickstart/github-flow" class="quick-link" target="_blank">
+                        📖 GitHub Flow Docs
+                    </a>
+                    <a href="https://semver.org" class="quick-link" target="_blank">
+                        📦 SemVer Official
+                    </a>
+                    <a href="https://conventionalcommits.org" class="quick-link" target="_blank">
+                        📝 Conventional Commits
+                    </a>
+                    <a href="https://cli.github.com" class="quick-link" target="_blank">
+                        🛠️ GitHub CLI
+                    </a>
+                    <a href="https://github.com/semantic-release/semantic-release" class="quick-link" target="_blank">
+                        🤖 Semantic Release
+                    </a>
+                    <a href="https://typicode.github.io/husky" class="quick-link" target="_blank">
+                        🎣 Husky Hooks
+                    </a>
+                </div>
+            </div>
+            
+            <div class="about">
+                <h3>🎯 Sobre Esta Colección</h3>
+                <p>Esta biblioteca de cheat sheets fue creada para desarrolladores que buscan workflows profesionales sin complejidad innecesaria. Cada guía está optimizada para desarrollo individual pero escalable para equipos.</p>
+                <p>Todas las referencias están actualizadas con las mejores prácticas de 2025 e incluyen ejemplos reales de proyectos.</p>
+                <div class="author-info">
+                    <div class="avatar">DEV</div>
+                    <div>
+                        <div style="font-weight: 600; color: #065f46;">Indie Developer</div>
+                        <div style="color: #059669; font-size: 0.9rem;">Workflow optimization enthusiast</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3>🔗 Recursos Adicionales</h3>
+            <div class="footer-links">
+                <a href="https://git-scm.com/docs" target="_blank">Git Documentation</a>
+                <a href="https://docs.github.com" target="_blank">GitHub Docs</a>
+                <a href="https://www.atlassian.com/git/tutorials" target="_blank">Git Tutorials</a>
+                <a href="https://learngitbranching.js.org" target="_blank">Learn Git Branching</a>
+                <a href="https://github.com/github/gitignore" target="_blank">GitIgnore Templates</a>
+            </div>
+            <div class="copyright">
+                <p>📚 Dev Cheat Sheets Collection - Siempre actualizadas, siempre útiles</p>
+                <p style="margin-top: 10px; opacity: 0.7;">Hecho con 💙 para la comunidad de desarrolladores</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scroll para mejor UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add click handlers para las cards
+        document.querySelectorAll('.cheatsheet-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Solo si no se clickeó un botón
+                if (!e.target.closest('.btn')) {
+                    const primaryLink = this.querySelector('.btn-primary');
+                    if (primaryLink) {
+                        window.open(primaryLink.href, '_blank');
+                    }
+                }
+            });
+        });
+
+        // Stats counter animation (opcional)
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current);
+            }, 16);
+        }
+
+        // Trigger counter animation when visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const numberElements = entry.target.querySelectorAll('.stat-number');
+                    numberElements.forEach(el => {
+                        const target = parseInt(el.textContent);
+                        if (!isNaN(target)) {
+                            animateCounter(el, target);
+                        }
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
+</body>
+</html>

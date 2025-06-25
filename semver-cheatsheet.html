@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semantic Versioning - Cheat Sheet</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #1f2937;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+        }
+        
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .version-hero {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 40px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .version-display {
+            font-size: 6rem;
+            font-weight: 800;
+            color: #1e40af;
+            font-family: 'Fira Code', monospace;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .version-parts {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .version-part {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+        }
+        
+        .version-part .number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .major { color: #dc2626; }
+        .minor { color: #059669; }
+        .patch { color: #2563eb; }
+        
+        .version-part .label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .version-part .description {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 8px;
+        }
+        
+        .content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+        
+        .card {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            height: fit-content;
+        }
+        
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: #1e40af;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .emoji {
+            font-size: 2rem;
+        }
+        
+        .rules-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rules-table th {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .rules-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .rules-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .rules-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        
+        .version-example {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .prerelease-section {
+            margin-top: 30px;
+        }
+        
+        .prerelease-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .prerelease-step {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .alpha-step { border-color: #f59e0b; }
+        .beta-step { border-color: #3b82f6; }
+        .rc-step { border-color: #8b5cf6; }
+        .stable-step { border-color: #10b981; }
+        
+        .step-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .alpha-badge { background: #fef3c7; color: #92400e; }
+        .beta-badge { background: #dbeafe; color: #1e40af; }
+        .rc-badge { background: #e9d5ff; color: #6b21a8; }
+        .stable-badge { background: #d1fae5; color: #065f46; }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .example-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .example-version {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        
+        .example-desc {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #374151, #4b5563);
+            color: white;
+            padding: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+        }
+        
+        .comparison-table .version-col {
+            font-family: 'Fira Code', monospace;
+            font-weight: 600;
+            color: #1e40af;
+        }
+        
+        .best-practices {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid #10b981;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .best-practices h3 {
+            color: #065f46;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .best-practices ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .best-practices li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .best-practices li::before {
+            content: '✅';
+            position: absolute;
+            left: 0;
+        }
+        
+        .antipatterns {
+            background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+            border: 1px solid #ef4444;
+            border-radius: 16px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        
+        .antipatterns h3 {
+            color: #991b1b;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .antipatterns ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .antipatterns li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .antipatterns li::before {
+            content: '❌';
+            position: absolute;
+            left: 0;
+        }
+        
+        .footer {
+            background: #1f2937;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .footer h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .footer a {
+            color: #60a5fa;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .footer a:hover {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .version-display {
+                font-size: 4rem;
+            }
+            
+            .version-parts {
+                gap: 20px;
+            }
+            
+            .content {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            
+            .card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📦 Semantic Versioning</h1>
+            <p class="subtitle">Tu guía completa para versionar como un pro</p>
+        </div>
+        
+        <div class="version-hero">
+            <div class="version-display">2.1.3</div>
+            <div class="version-parts">
+                <div class="version-part">
+                    <div class="number major">2</div>
+                    <div class="label major">Major</div>
+                    <div class="description">Breaking changes</div>
+                </div>
+                <div class="version-part">
+                    <div class="number minor">1</div>
+                    <div class="label minor">Minor</div>
+                    <div class="description">New features</div>
+                </div>
+                <div class="version-part">
+                    <div class="number patch">3</div>
+                    <div class="label patch">Patch</div>
+                    <div class="description">Bug fixes</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="card">
+                <h2><span class="emoji">📋</span>Reglas Básicas</h2>
+                <table class="rules-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Cuándo incrementar</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong class="major">MAJOR</strong></td>
+                            <td>Breaking changes (incompatible)</td>
+                            <td class="version-example">1.2.3 → 2.0.0</td>
+                        </tr>
+                        <tr>
+                            <td><strong class="minor">MINOR</strong></td>
+                            <td>Nueva funcionalidad (compatible)</td>
+                            <td class="version-example">1.2.3 → 1.3.0</td>
+                        </tr>
+                        <tr>
+                            <td><strong class="patch">PATCH</strong></td>
+                            <td>Bug fixes (compatible)</td>
+                            <td class="version-example">1.2.3 → 1.2.4</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="best-practices">
+                    <h3>✅ Mejores Prácticas</h3>
+                    <ul>
+                        <li>Empezar con 1.0.0 para primera versión pública</li>
+                        <li>Incrementar solo un número por release</li>
+                        <li>Resetear números menores al incrementar mayor</li>
+                        <li>Usar 0.x.x para desarrollo inicial</li>
+                        <li>Documentar cambios en CHANGELOG.md</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="emoji">🧪</span>Pre-releases</h2>
+                <div class="prerelease-flow">
+                    <div class="prerelease-step alpha-step">
+                        <div class="step-badge alpha-badge">Alpha</div>
+                        <div>
+                            <strong>v2.0.0-alpha.1</strong><br>
+                            <small>Desarrollo temprano, muchos bugs</small>
+                        </div>
+                    </div>
+                    <div class="prerelease-step beta-step">
+                        <div class="step-badge beta-badge">Beta</div>
+                        <div>
+                            <strong>v2.0.0-beta.1</strong><br>
+                            <small>Funcionalidad completa, testing</small>
+                        </div>
+                    </div>
+                    <div class="prerelease-step rc-step">
+                        <div class="step-badge rc-badge">RC</div>
+                        <div>
+                            <strong>v2.0.0-rc.1</strong><br>
+                            <small>Release candidate, casi listo</small>
+                        </div>
+                    </div>
+                    <div class="prerelease-step stable-step">
+                        <div class="step-badge stable-badge">Stable</div>
+                        <div>
+                            <strong>v2.0.0</strong><br>
+                            <small>Versión final estable</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Orden de Precedencia:</h3>
+                <div style="font-family: 'Fira Code', monospace; background: white; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                    1.0.0-alpha.1 &lt; 1.0.0-alpha.2 &lt; 1.0.0-beta.1 &lt; 1.0.0-rc.1 &lt; 1.0.0
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="emoji">📊</span>Ejemplos Prácticos</h2>
+                <div class="examples-grid">
+                    <div class="example-item">
+                        <div class="example-version">1.0.0</div>
+                        <div class="example-desc">Primera versión pública</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-version">1.0.1</div>
+                        <div class="example-desc">Bug fix</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-version">1.1.0</div>
+                        <div class="example-desc">Nueva feature</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-version">2.0.0</div>
+                        <div class="example-desc">Breaking change</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-version">2.1.0-alpha.1</div>
+                        <div class="example-desc">Alpha de v2.1.0</div>
+                    </div>
+                    <div class="example-item">
+                        <div class="example-version">2.1.0-beta.2</div>
+                        <div class="example-desc">Segunda beta</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="emoji">🎯</span>Tipos de Cambios</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo de Cambio</th>
+                            <th>Versión</th>
+                            <th>Descripción</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Breaking Change</strong></td>
+                            <td class="version-col">MAJOR</td>
+                            <td>Rompe compatibilidad</td>
+                            <td>Cambiar API endpoint</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Nueva Feature</strong></td>
+                            <td class="version-col">MINOR</td>
+                            <td>Agrega funcionalidad</td>
+                            <td>Nuevo método público</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Bug Fix</strong></td>
+                            <td class="version-col">PATCH</td>
+                            <td>Corrige comportamiento</td>
+                            <td>Fix validación email</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance</strong></td>
+                            <td class="version-col">PATCH</td>
+                            <td>Mejora rendimiento</td>
+                            <td>Optimizar queries</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Security Fix</strong></td>
+                            <td class="version-col">PATCH</td>
+                            <td>Parche de seguridad</td>
+                            <td>Fix vulnerabilidad</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Deprecation</strong></td>
+                            <td class="version-col">MINOR</td>
+                            <td>Marcar como obsoleto</td>
+                            <td>Deprecar método old</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h2><span class="emoji">🔢</span>Versión 0.x.x</h2>
+                <p style="margin-bottom: 20px;">La versión <strong>0.x.x</strong> es para desarrollo inicial. Todo puede cambiar en cualquier momento.</p>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Versión 0.x.x</th>
+                            <th>Versión 1.x.x+</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0.1.0 → 0.2.0 (breaking)</td>
+                            <td>1.0.0 → 2.0.0 (breaking)</td>
+                        </tr>
+                        <tr>
+                            <td>0.1.0 → 0.1.1 (features/fixes)</td>
+                            <td>1.0.0 → 1.1.0 (features)</td>
+                        </tr>
+                        <tr>
+                            <td>API inestable</td>
+                            <td>API estable y versionada</td>
+                        </tr>
+                        <tr>
+                            <td>Para desarrollo</td>
+                            <td>Para producción</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="background: #fef3c7; border: 1px solid #f59e0b; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <strong>⚠️ Importante:</strong> La versión 0.x.x NO garantiza compatibilidad hacia atrás.
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="emoji">⚡</span>Commands Útiles</h2>
+                <div style="background: #1f2937; color: #f1f5f9; padding: 20px; border-radius: 12px; font-family: 'Fira Code', monospace; font-size: 0.9rem;">
+<pre># NPM
+npm version patch    # 1.0.0 → 1.0.1
+npm version minor    # 1.0.0 → 1.1.0  
+npm version major    # 1.0.0 → 2.0.0
+npm version prerelease --preid=alpha # 1.0.0 → 1.0.1-alpha.0
+
+# Git tags
+git tag v1.0.0
+git tag v1.1.0-beta.1
+git push origin --tags
+
+# Semantic Release
+npx semantic-release --dry-run
+npx semantic-release
+
+# Manual bumping
+npm version 1.2.3-alpha.1
+npm version 2.0.0-rc.1</pre>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2><span class="emoji">🚫</span>Antipatrones</h2>
+                <div class="antipatterns">
+                    <h3>❌ No hagas esto</h3>
+                    <ul>
+                        <li>Versiones como v1.2.3.4 (cuatro números)</li>
+                        <li>Fechas como versiones (v2024.01.15)</li>
+                        <li>Saltar versiones (1.0.0 → 1.2.0 sin 1.1.0)</li>
+                        <li>Cambiar versión sin cambios en código</li>
+                        <li>Breaking changes en PATCH</li>
+                        <li>Features nuevas en PATCH</li>
+                        <li>Usar 'latest' como versión fija</li>
+                    </ul>
+                </div>
+                
+                <div class="best-practices">
+                    <h3>✅ Hazlo bien</h3>
+                    <ul>
+                        <li>Sigue estrictamente MAJOR.MINOR.PATCH</li>
+                        <li>Usa pre-releases para testing</li>
+                        <li>Documenta todos los cambios</li>
+                        <li>Automatiza el bumping de versiones</li>
+                        <li>Mantén CHANGELOG actualizado</li>
+                        <li>Usa conventional commits</li>
+                        <li>Test antes de release</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <h3>🔗 Referencias y Herramientas</h3>
+            <div class="footer-links">
+                <a href="https://semver.org" target="_blank">Documentación Oficial SemVer</a>
+                <a href="https://github.com/semantic-release/semantic-release" target="_blank">Semantic Release</a>
+                <a href="https://conventionalcommits.org" target="_blank">Conventional Commits</a>
+                <a href="https://www.npmjs.com/package/semver" target="_blank">NPM Semver Package</a>
+                <a href="https://semver.npmjs.com" target="_blank">SemVer Calculator</a>
+            </div>
+            <p style="margin-top: 20px; opacity: 0.8;">
+                📦 Mantén tus versiones semánticamente correctas - tus usuarios te lo agradecerán
+            </p>
+        </div>
+    </div>
+</body>
+</html>
